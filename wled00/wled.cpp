@@ -429,6 +429,11 @@ void WLED::initAP(bool resetAP)
 
 void WLED::initConnection()
 {
+  WiFi.disconnect(true);  // Disconnect from the network
+  WiFi.mode(WIFI_OFF);    // Switch WiFi off
+  // Try lower cpu freq too?
+
+  /*
   #ifdef WLED_ENABLE_WEBSOCKETS
   ws.onEvent(wsEvent);
   #endif
@@ -497,6 +502,7 @@ void WLED::initConnection()
 #else
   wifi_set_sleep_type((noWifiSleep) ? NONE_SLEEP_T : MODEM_SLEEP_T);
 #endif
+*/
 }
 
 void WLED::initInterfaces()
