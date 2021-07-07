@@ -68,7 +68,7 @@
 void WS2812FX::finalizeInit(uint16_t countPixels)
 {
   RESET_RUNTIME;
-  _length = countPixels;
+  _length = 60;
 
   //if busses failed to load, add default (FS issue...)
   if (busses.getNumBusses() == 0) {
@@ -127,7 +127,9 @@ void WS2812FX::finalizeInit(uint16_t countPixels)
   }
 
   for (uint8_t i = 0; i < MAX_NUM_SEGMENTS; i++) {
+    DEBUG_PRINT(_segments[i].start);
     _segments[i].start = segStarts[i];
+    DEBUG_PRINT(_segments[i].stop);
     _segments[i].stop  = segStops [i];
   }
 }
