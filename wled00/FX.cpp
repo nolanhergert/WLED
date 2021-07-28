@@ -1884,6 +1884,7 @@ uint16_t WS2812FX::mode_fillnoise8()
   return FRAMETIME;
 }
 
+/*
 uint16_t WS2812FX::mode_noise16_1()
 {
   uint16_t scale = 320;                                      // the "zoom factor" for the noise
@@ -1910,7 +1911,33 @@ uint16_t WS2812FX::mode_noise16_1()
 
   return FRAMETIME;
 }
+*/
 
+uint16_t WS2812FX::mode_noise16_1()
+{
+  uint32_t scale = 1000;                                       // the "zoom factor" for the noise
+  CRGB fastled_col;
+  SEGENV.step += (1 + (SEGMENT.speed >> 1));
+  
+  uint32_t shift_x = (SEGENV.step * scale) / 64;        // x as a function of time (constant for this function)
+
+  for (uint16_t i = 0; i < SEGLEN; i++) {                
+    uint32_t real_x = (i * scale + shift_x);     // calculate the coordinates within the noise field
+    
+
+    // Could be divide by 85.333. (256 / 3)
+    // But it's still screwing it up somehow...
+    // Dark spots
+    uint8_t noise = inoise16(real_x, 0, 4223) >> 8;    // get the noise data and scale it down
+
+    uint8_t index = sin8(noise * 3);                          // map led color based on noise data
+
+    fastled_col = ColorFromPalette(currentPalette, index, noise, LINEARBLEND);   // With that value, look up the 8 bit colour palette value and assign it to the current LED.
+    setPixelColor(i, fastled_col.red, fastled_col.green, fastled_col.blue);
+  }
+
+  return FRAMETIME;
+}
 
 uint16_t WS2812FX::mode_noise16_2()
 {
